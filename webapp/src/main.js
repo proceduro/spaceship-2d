@@ -1,11 +1,11 @@
 "use strict";
 
 var fs = require("fs");
-let ship2d = require("../../spaceship2d");
+var ship2d = require("../../spaceship2d");
 
-let displayResolution = 512;
+var displayResolution = 512;
 
-let shipCount = 9;
+var shipCount = 9;
 
 window.onload = function(){
 
@@ -17,7 +17,7 @@ window.onload = function(){
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Controls ////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    let ControlsMenu = function() {
+    var ControlsMenu = function() {
         this.startOver = function() {
             for (var i = 0; i < shipCount; i++) {
                 ships[i] = ship2d.generateShip();
@@ -53,20 +53,20 @@ window.onload = function(){
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Rendering ///////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    let spriteContainer = document.getElementById("sprite-container");
+    var spriteContainer = document.getElementById("sprite-container");
 
-    let canvases = [];
-    let saveIcons = [];
-    for (let i = 0; i < shipCount; i++) {
-        let canvas = document.createElement("canvas");
+    var canvases = [];
+    var saveIcons = [];
+    for (var i = 0; i < shipCount; i++) {
+        var canvas = document.createElement("canvas");
         canvas.width = canvas.height = 768;
         canvas.style.width = canvas.style.height = "256px";
         canvas.style.paddingRight = "32px";
         spriteContainer.appendChild(canvas);
         canvas.id = i;
         canvas.onclick = function() {
-            let id = parseInt(canvas.id);
-            for (let j = 0; j < shipCount; j++) {
+            var id = parseInt(this.id);
+            for (var j = 0; j < shipCount; j++) {
                 if (j == id) {
                     continue;
                 }
@@ -75,7 +75,7 @@ window.onload = function(){
             render();
         };
         canvases.push(canvas);
-        let img = document.createElement("img");
+        var img = document.createElement("img");
         img.number = i;
         saveIcons.push(img);
         img.src = "static/img/save-icon.png";
@@ -87,15 +87,14 @@ window.onload = function(){
         spriteContainer.appendChild(img);
         $(img).fadeOut(0);
         img.onclick = function() {
-            let diag = vex.open({
+            var diag = vex.open({
                 content: fs.readFileSync(__dirname + "/save-dialog.html", "utf8")
             });
-            let id = parseInt(img.number);
+            var id = parseInt(this.number);
             function _render() {
-                console.log("render");
-                let ship = ships[id];
+                var ship = ships[id];
                 saveRenderer.render(ship);
-                let container = document.getElementById("save-dialog-render-container");
+                var container = document.getElementById("save-dialog-render-container");
                 container.innerHTML = "";
                 saveRenderer.colorSprite.className = "save-dialog-sprite";
                 saveRenderer.normalSprite.className = "save-dialog-sprite";
@@ -112,48 +111,50 @@ window.onload = function(){
                     resolution: parseInt(this.value)
                 });
                 _render();
-            }
-        }
-        $(canvas).hover(function() {
-            $(img).fadeIn(0);
-        }, function() {
-            $(img).fadeOut(0);
-        });
-        $(img).hover(function() {
-            $(img).fadeIn(0);
-        }, function() {
-            $(img).fadeOut(0);
-        });
+            };
+        };
+        (function(_img, _canvas) {
+            $(_canvas).hover(function() {
+                $(_img).fadeIn(0);
+            }, function() {
+                $(_img).fadeOut(0);
+            });
+            $(_img).hover(function() {
+                $(_img).fadeIn(0);
+            }, function() {
+                $(_img).fadeOut(0);
+            });
+        })(img, canvas);
     }
 
-    let ships = [];
-    for (let i = 0; i < shipCount; i++) {
+    var ships = [];
+    for (var i = 0; i < shipCount; i++) {
         ships.push(ship2d.generateShip());
     }
 
-    let displayRenderer = new ship2d.Renderer({
+    var displayRenderer = new ship2d.Renderer({
         resolution: displayResolution
     });
 
-    let saveRenderer = new ship2d.Renderer({
+    var saveRenderer = new ship2d.Renderer({
         resolution: menu.resolution
     });
 
     render();
 
     function render() {
-        for (let i = 0; i < shipCount; i++) {
-            let ship = ships[i];
-            let canvas = canvases[i];
+        for (var i = 0; i < shipCount; i++) {
+            var ship = ships[i];
+            var canvas = canvases[i];
             displayRenderer.render(ship);
             canvas.width = canvas.height = displayResolution;
-            let ctx = canvas.getContext("2d");
+            var ctx = canvas.getContext("2d");
             ctx.drawImage(displayRenderer.colorSprite, 0, 0);
         }
     }
 
     function showHelp() {
-        let diag = vex.open({
+        var diag = vex.open({
             content: fs.readFileSync(__dirname + "/help-dialog.html", "utf8")
         });
     }

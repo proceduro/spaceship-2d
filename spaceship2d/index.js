@@ -371,7 +371,7 @@ function genShip(ship) {
         var code = ship.code[i];
         var tetra = tetrahedron();
         tetra = shapeToMesh(tetra);
-        let color = {
+        var color = {
             r: ship.baseColor.r + code.color.r,
             g: ship.baseColor.g + code.color.g,
             b: ship.baseColor.b + code.color.b
